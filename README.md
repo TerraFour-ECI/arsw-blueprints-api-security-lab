@@ -1,48 +1,51 @@
 # Escuela Colombiana de Ingeniería Julio Garavito
-## Arquitectura de Software – ARSW
-### Laboratorio – Parte 2: BluePrints API con Seguridad JWT (OAuth 2.0)
+## Software Architecture – ARSW
+### Lab – Part 2: BluePrints API with JWT Security (OAuth 2.0)
 
-Este laboratorio extiende la **Parte 1** ([Lab_P1_BluePrints_Java21_API](https://github.com/DECSIS-ECI/Lab_P1_BluePrints_Java21_API)) agregando **seguridad a la API** usando **Spring Boot 3, Java 21 y JWT (OAuth 2.0)**.  
-El API se convierte en un **Resource Server** protegido por tokens Bearer firmados con **RS256**.  
-Incluye un endpoint didáctico `/auth/login` que emite el token para facilitar las pruebas.
-
----
-
-## Objetivos
-- Implementar seguridad en servicios REST usando **OAuth2 Resource Server**.
-- Configurar emisión y validación de **JWT**.
-- Proteger endpoints con **roles y scopes** (`blueprints.read`, `blueprints.write`).
-- Integrar la documentación de seguridad en **Swagger/OpenAPI**.
+This lab extends **Part 1** ([Lab_P1_BluePrints_Java21_API](https://github.com/TerraFour-ECI/arsw-blueprints-api-lab)) by adding **API security** using **Spring Boot 3, Java 21, and JWT (OAuth 2.0)**.  
+The API becomes a **Resource Server** protected by Bearer tokens signed with **RS256**.  
+It includes a didactic `/auth/login` endpoint that issues the token to facilitate testing.
 
 ---
 
-## Requisitos
+## Objectives
+
+- Implement security in REST services using **OAuth2 Resource Server**.
+- Configure **JWT** issuance and validation.
+- Protect endpoints with **roles and scopes** (`blueprints.read`, `blueprints.write`).
+- Integrate security documentation into **Swagger/OpenAPI**.
+
+---
+
+## Requirements
+
 - JDK 21
 - Maven 3.9+
 - Git
 
 ---
 
-## Ejecución del proyecto
-1. Clonar o descomprimir el proyecto:
+## Running the project
+
+1. Clone or unzip the project:
    ```bash
    git clone https://github.com/DECSIS-ECI/Lab_P2_BluePrints_Java21_API_Security_JWT.git
    cd Lab_P2_BluePrints_Java21_API_Security_JWT
    ```
-   ó si el profesor entrega el `.zip`, descomprimirlo y entrar en la carpeta.
+   Or if the professor provides a `.zip`, unzip it and navigate into the folder.
 
-2. Ejecutar con Maven:
+2. Run with Maven:
    ```bash
    mvn -q -DskipTests spring-boot:run
    ```
 
-3. Verificar que la aplicación levante en `http://localhost:8080`.
+3. Verify the application starts at `http://localhost:8080`.
 
 ---
 
-## Endpoints principales
+## Main Endpoints
 
-### 1. Login (emite token)
+### 1. Login (issues token)
 ```
 POST http://localhost:8080/auth/login
 Content-Type: application/json
@@ -52,7 +55,7 @@ Content-Type: application/json
   "password": "student123"
 }
 ```
-Respuesta:
+Response:
 ```json
 {
   "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -61,40 +64,42 @@ Respuesta:
 }
 ```
 
-### 2. Consultar blueprints (requiere scope `blueprints.read`)
+### 2. Get blueprints (requires scope `blueprints.read`)
 ```
 GET http://localhost:8080/api/blueprints
 Authorization: Bearer <ACCESS_TOKEN>
 ```
 
-### 3. Crear blueprint (requiere scope `blueprints.write`)
+### 3. Create blueprint (requires scope `blueprints.write`)
 ```
 POST http://localhost:8080/api/blueprints
 Authorization: Bearer <ACCESS_TOKEN>
 Content-Type: application/json
 
 {
-  "name": "Nuevo Plano"
+  "name": "New Blueprint"
 }
 ```
 
 ---
 
 ## Swagger UI
+
 - URL: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-- Pulsa **Authorize**, ingresa el token en el formato:
+- Click **Authorize**, enter the token in the following format:
   ```
   Bearer eyJhbGciOi...
   ```
 
 ---
 
-## Estructura del proyecto
+## Project Structure
+
 ```
 src/main/java/co/edu/eci/blueprints/
-  ├── api/BlueprintController.java       # Endpoints protegidos
-  ├── auth/AuthController.java           # Login didáctico para emitir tokens
-  ├── config/OpenApiConfig.java          # Configuración Swagger + JWT
+  ├── api/BlueprintController.java       # Protected endpoints
+  ├── auth/AuthController.java           # Didactic login to issue tokens
+  ├── config/OpenApiConfig.java          # Swagger + JWT configuration
   └── security/
        ├── SecurityConfig.java
        ├── MethodSecurityConfig.java
@@ -107,21 +112,24 @@ src/main/resources/
 
 ---
 
-## Actividades propuestas
-1. Revisar el código de configuración de seguridad (`SecurityConfig`) e identificar cómo se definen los endpoints públicos y protegidos.
-2. Explorar el flujo de login y analizar las claims del JWT emitido.
-3. Extender los scopes (`blueprints.read`, `blueprints.write`) para controlar otros endpoints de la API, del laboratorio P1 trabajado.
-4. Modificar el tiempo de expiración del token y observar el efecto.
-5. Documentar en Swagger los endpoints de autenticación y de negocio.
+## Proposed Activities
+
+1. Review the security configuration code (`SecurityConfig`) and identify how public and protected endpoints are defined.
+2. Explore the login flow and analyze the claims in the issued JWT.
+3. Extend the scopes (`blueprints.read`, `blueprints.write`) to control other API endpoints from the P1 lab.
+4. Modify the token expiration time and observe the effect.
+5. Document the authentication and business endpoints in Swagger.
 
 ---
 
-## Lecturas recomendadas
+## Recommended Reading
+
 - [Spring Security Reference – OAuth2 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/index.html)
 - [Spring Boot – Securing Web Applications](https://spring.io/guides/gs/securing-web/)
 - [JSON Web Tokens – jwt.io](https://jwt.io/introduction)
 
 ---
 
-## Licencia
-Proyecto educativo con fines académicos – Escuela Colombiana de Ingeniería Julio Garavito.
+## License
+
+Educational project for academic purposes – Escuela Colombiana de Ingeniería Julio Garavito.
