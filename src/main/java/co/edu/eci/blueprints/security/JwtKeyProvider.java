@@ -15,7 +15,7 @@ public class JwtKeyProvider {
             kpg.initialize(2048);
             this.keyPair = kpg.generateKeyPair();
         } catch (Exception e) {
-            throw new IllegalStateException("No se pudo generar llave RSA", e);
+            throw new IllegalStateException("Could not generate RSA key pair", e);
         }
     }
 
