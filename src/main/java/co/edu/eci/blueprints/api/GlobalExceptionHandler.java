@@ -3,6 +3,8 @@ package co.edu.eci.blueprints.api;
 import co.edu.eci.blueprints.api.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,6 +21,15 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(", "));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse<>(400, "Validation failed: " + details, null));
+    }
+
+    /**
+     * Re-throw Spring Security exceptions so the framework's own handlers
+     * (ExceptionTranslationFilter) can produce the correct 401/403 response.
+     */
+    @ExceptionHandler({AccessDeniedException.class, AuthenticationException.class})
+    public void rethrowSecurityExceptions(RuntimeException ex) throws RuntimeException {
+        throw ex;
     }
 
     @ExceptionHandler(Exception.class)
