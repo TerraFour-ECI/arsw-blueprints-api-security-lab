@@ -241,7 +241,7 @@ sequenceDiagram
     Security-->>BpCtrl: ✅ Authorized
 
     BpCtrl->>Services: getAllBlueprints()
-    Services-->>BpCtrl: Set&lt;Blueprint&gt;
+    Services-->>BpCtrl: Set of Blueprints
     BpCtrl-->>Client: 200 OK ApiResponse{code:200, data:[...]}
 
     Note over Client,Services: ── STEP 3: Insufficient Scope ─────────────────────────────
