@@ -28,8 +28,20 @@
 9. [Testing](#-testing)
 10. [Swagger / OpenAPI](#-swagger--openapi)
 11. [Lab Activities](#-lab-activities)
-12. [Recommended Reading](#-recommended-reading)
-13. [Evidence Screenshots](#-evidence-screenshots)
+12. [Lab Report](#-lab-report)
+13. [Recommended Reading](#-recommended-reading)
+14. [Evidence Screenshots](#-evidence-screenshots)
+
+---
+
+## 📄 Lab Report
+
+The formal academic report for this laboratory is available as a compiled PDF:
+
+[![Lab Report PDF](https://img.shields.io/badge/Lab%20Report-PDF-red?logo=adobeacrobatreader&logoColor=white)](report/main.pdf)
+
+> **Source:** The LaTeX source file is located at [`report/main.tex`](report/main.tex).  
+> To compile: `cd report && pdflatex main.tex && pdflatex main.tex`
 
 ---
 
