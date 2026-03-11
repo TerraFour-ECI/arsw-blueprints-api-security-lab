@@ -15,7 +15,7 @@ public class OpenApiConfig {
         return new OpenAPI()
           .info(new Info().title("BluePrints API")
             .version("2.0")
-            .description("Parte 2 — Seguridad con JWT (OAuth 2.0)"))
+            .description("Part 2 — Security with JWT (OAuth 2.0 Resource Server). All /api/** endpoints require a Bearer token."))
           .addSecurityItem(new SecurityRequirement().addList("bearer-jwt"))
           .components(new Components().addSecuritySchemes("bearer-jwt",
             new SecurityScheme()

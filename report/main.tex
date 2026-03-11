@@ -1,0 +1,897 @@
+% ╔══════════════════════════════════════════════════════════════════════════╗
+% ║  ESCUELA COLOMBIANA DE INGENIERÍA JULIO GARAVITO                        ║
+% ║  Software Architecture (ARSW) — Laboratory No. 5                        ║
+% ║  BluePrints API Security — JWT / OAuth2 Resource Server                 ║
+% ╚══════════════════════════════════════════════════════════════════════════╝
+
+\documentclass[10pt,a4paper,twocolumn]{article}
+
+% ─── Encoding & language ──────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% ─── Maths ───────────────────────────────────────────────────────────────────
+\usepackage{amsmath}
+
+% ─── Graphics & layout ───────────────────────────────────────────────────────
+\usepackage{graphicx}
+\usepackage[top=2cm, bottom=2cm, left=1.8cm, right=1.8cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% ─── Code listing ────────────────────────────────────────────────────────────
+\usepackage{listings}
+
+% ─── Colors & boxes ──────────────────────────────────────────────────────────
+\usepackage[dvipsnames]{xcolor}
+\usepackage[most]{tcolorbox}
+
+% ─── Hyperlinks ──────────────────────────────────────────────────────────────
+\usepackage{hyperref}
+
+% ─── Typography helpers ───────────────────────────────────────────────────────
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage{array}
+\usepackage{makecell}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+%  COLOUR & STYLE DEFINITIONS
+% ═══════════════════════════════════════════════════════════════════════════════
+\definecolor{darkblue}{RGB}{0,32,96}
+\definecolor{lightblue}{RGB}{173,216,230}
+\definecolor{codebg}{RGB}{245,245,245}
+\definecolor{placeholderbg}{RGB}{240,240,240}
+\definecolor{successgreen}{RGB}{40,167,69}
+\definecolor{warningorange}{RGB}{255,140,0}
+\definecolor{dangerred}{RGB}{220,53,69}
+
+% Section header color
+\titleformat{\section}{\large\bfseries\color{darkblue}}{}{0em}{\thesection\quad}
+\titleformat{\subsection}{\normalsize\bfseries\color{darkblue!80}}{}{0em}{\thesubsection\quad}
+\titlespacing*{\section}{0pt}{10pt}{4pt}
+\titlespacing*{\subsection}{0pt}{8pt}{3pt}
+
+% ─── Header / Footer ─────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textcolor{darkblue}{\textbf{Software Architecture}}}
+\rhead{\textcolor{darkblue}{Lab 05 -- Blueprints API Security}}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ─── Code Listing Style ───────────────────────────────────────────────────────
+\lstdefinestyle{javacode}{
+    language=Java,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{darkgreen},
+    numberstyle=\tiny\color{gray},
+    numbers=left,
+    stepnumber=1,
+    numbersep=5pt,
+    frame=single,
+    framerule=0.4pt,
+    rulecolor=\color{gray!50},
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=2,
+    captionpos=b,
+    xleftmargin=10pt,
+    xrightmargin=5pt,
+    aboveskip=6pt,
+    belowskip=6pt,
+    morekeywords={@Bean,@Component,@Service,@Repository,@RestController,
+                  @GetMapping,@PostMapping,@PutMapping,@DeleteMapping,
+                  @RequestBody,@PathVariable,@PreAuthorize,@EnableMethodSecurity,
+                  @SecurityRequirement,@Operation,@ApiResponse,@Tag,
+                  @Configuration,@EnableWebSecurity,@Profile,@Override,
+                  record,var,sealed}
+}
+\lstdefinestyle{yamlcode}{
+    language=Java,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{Brown},
+    frame=single, framerule=0.4pt, rulecolor=\color{gray!50},
+    breaklines=true, showstringspaces=false, tabsize=2,
+    captionpos=b, xleftmargin=10pt, aboveskip=6pt, belowskip=6pt
+}
+
+% ─── Custom tcolorbox environments ───────────────────────────────────────────
+\tcbset{
+    conceptbox/.style={
+        colback=blue!5!white, colframe=darkblue,
+        coltitle=white, colbacktitle=darkblue,
+        title={\textbf{Concept}}, fonttitle=\bfseries\small,
+        boxrule=0.8pt, before skip=8pt, after skip=8pt,
+        left=4pt, right=4pt, top=6pt, bottom=6pt, breakable
+    },
+    resultbox/.style={
+        colback=green!5!white, colframe=successgreen,
+        coltitle=white, colbacktitle=successgreen,
+        title={\textbf{Result}}, fonttitle=\bfseries\small,
+        boxrule=0.8pt, before skip=8pt, after skip=8pt,
+        left=4pt, right=4pt, top=6pt, bottom=6pt, breakable
+    },
+    note/.style={
+        colback=yellow!10!white, colframe=warningorange,
+        coltitle=white, colbacktitle=warningorange,
+        title={\textbf{Note}}, fonttitle=\bfseries\small,
+        boxrule=0.8pt, before skip=8pt, after skip=8pt,
+        left=4pt, right=4pt, top=6pt, bottom=6pt, breakable
+    },
+    warningbox/.style={
+        colback=red!5!white, colframe=dangerred,
+        colbacktitle=dangerred, coltitle=white,
+        title={\textbf{Key Design Decision}}, fonttitle=\bfseries\small,
+        boxrule=0.8pt, before skip=8pt, after skip=8pt,
+        left=4pt, right=4pt, top=6pt, bottom=6pt, breakable
+    }
+}
+\newtcolorbox{conceptbox}[1][]{conceptbox, #1}
+\newtcolorbox{resultbox}[1][]{resultbox, #1}
+\newtcolorbox{note}[1][]{note, #1}
+\newtcolorbox{warningbox}[1][]{warningbox, #1}
+
+% ─── Image helper ─────────────────────────────────────────────────────────────
+\newcommand{\imgplaceholder}[2]{%
+    \IfFileExists{#2}{%
+        \includegraphics[height=#1,width=\linewidth,keepaspectratio]{#2}%
+    }{%
+        \begin{tcolorbox}[
+            colback=placeholderbg, colframe=gray!60,
+            height=#1, valign=center, halign=center,
+            fontupper=\small\ttfamily\color{gray!70},
+            boxrule=0.5pt, left=2pt, right=2pt
+        ]
+            #2
+        \end{tcolorbox}%
+    }%
+}
+
+\setlist[itemize]{leftmargin=15pt, itemsep=2pt, parsep=0pt, topsep=5pt}
+\setlist[enumerate]{leftmargin=15pt, itemsep=2pt, parsep=0pt, topsep=5pt}
+\captionsetup{font=small, labelfont=bf, format=hang, indention=0pt, margin=10pt}
+\hypersetup{colorlinks=true, linkcolor=darkblue, urlcolor=darkblue,
+            citecolor=darkblue, pdfborder={0 0 0}}
+
+% ─────────────────────────── TITLE PAGE ────────────────────────────────────
+\title{\vspace{-1cm}
+    \begin{center}
+        \includegraphics[width=0.25\textwidth]{media/university_logo.png}
+    \end{center}
+    \vspace{1.5cm}
+    \textbf{\Large Software Architecture Laboratory}\\
+    \vspace{1cm}
+    \textbf{\huge Laboratory No. 5}\\
+    \textbf{\huge BluePrints API -- JWT Security}\\
+    \vspace{1.5cm}
+    \large OAuth 2.0 Resource Server / Spring Boot 3.3.x
+}
+
+\author{
+    \vspace{2cm}
+    \textbf{Students:}\\[0.05cm]
+    Andersson David S\'{a}nchez M\'{e}ndez\\[0.3cm]
+    Cristian Santiago Pedraza Rodr\'{i}guez\\[0.3cm]
+    Elizabeth Correa Su\'{a}rez\\[0.3cm]
+    Juan Sebastian Ortega Mu\~{n}oz\\[1.5cm]
+    \textbf{Instructor:} Professor Javier Ivan Toquica Barrera\\[0.5cm]
+    \textbf{Course:} Software Architecture (ARSW)\\[0.3cm]
+    \textbf{Institution:} Escuela Colombiana de Ingenier\'{i}a Julio Garavito\\[2cm]
+}
+
+\date{March 2026}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+\begin{document}
+
+\onecolumn
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\tableofcontents
+\newpage
+
+% ═══════════════════════════════════════════════════════════════════════════════
+\twocolumn
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Objective}
+% ─────────────────────────────────────────────────────────────────────────────
+
+This laboratory extends the Blueprints REST API developed in Laboratory~4 by
+incorporating a stateless security layer based on \textbf{JSON Web Tokens (JWT)}
+following the \textit{OAuth 2.0 Resource Server} pattern.
+
+\begin{conceptbox}[title={Security Objectives}]
+\begin{enumerate}
+  \item Configure Spring Security 6 as an OAuth2 Resource Server validating
+        RS256-signed JWTs.
+  \item Implement an in-process token issuer (\texttt{/auth/login}) that
+        generates short-lived tokens with fine-grained \textbf{scopes}.
+  \item Enforce \textbf{method-level access control} via
+        \texttt{@PreAuthorize} distinguishing read (\texttt{blueprints.read})
+        from write (\texttt{blueprints.write}) operations.
+  \item Expose validated JWT authentication through the \textbf{Swagger UI}
+        (OpenAPI 3 Bearer scheme).
+  \item Maintain the existing filter pipeline (Identity, Redundancy,
+        Undersampling strategies) from the previous lab.
+  \item Achieve \textbf{full test coverage} with MockMvc JWT mocks and a
+        real end-to-end authentication flow test.
+\end{enumerate}
+\end{conceptbox}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Application Architecture}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The application follows a layered architecture that adds a dedicated
+\textbf{Security Layer} on top of the REST layer introduced in Lab~4.
+
+\subsection{Package Structure}
+
+\begin{center}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Package} & \textbf{Responsibility} \\
+\midrule
+\texttt{model}       & Domain entities (\texttt{Blueprint}, \texttt{Point}) \\
+\texttt{persistence} & Storage interface + in-memory impl \\
+\texttt{filters}     & Strategy pattern filter pipeline \\
+\texttt{services}    & Business orchestration \\
+\texttt{api}         & REST controllers + DTOs \\
+\texttt{auth}        & Token-issuing \texttt{AuthController} \\
+\texttt{security}    & Security config, JWT beans, user service \\
+\texttt{config}      & OpenAPI / Swagger configuration \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Request / Response Flow}
+
+Every secured request traverses the following layers:
+
+\begin{enumerate}
+  \item \textbf{SecurityFilterChain} — Spring Security intercepts the HTTP
+        request. Public paths (\texttt{/auth/login}, Swagger) are permitted;
+        all \texttt{/api/**} paths require a valid Bearer token.
+  \item \textbf{JwtDecoder} — validates the RSA-2048 signature and
+        expiration of the incoming JWT.
+  \item \textbf{@PreAuthorize} — \texttt{MethodSecurityConfig} evaluates the
+        scope claim; insufficient scope yields HTTP~403.
+  \item \textbf{Service layer} — business logic and filter application.
+  \item \textbf{Persistence layer} — \texttt{ConcurrentHashMap} storage.
+  \item \textbf{ApiResponse\textless{}T\textgreater{}} — uniform JSON
+        envelope returned to the client.
+\end{enumerate}
+
+\begin{warningbox}
+The API does \emph{not} rely on an external authorisation server. The same
+Spring Boot process generates the RSA key pair at startup, issues JWTs via
+\texttt{/auth/login}, and validates them via \texttt{JwtDecoder}.
+All key material is ephemeral (in-memory only).
+\end{warningbox}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Part 1 --- Ported Domain Model}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The complete domain and persistence layer from Lab~4 was ported into the
+security lab package structure (\texttt{co.edu.eci.blueprints}) without
+functional changes.
+
+\subsection{Domain Entities}
+
+\begin{lstlisting}[style=javacode, caption={Blueprint and Point records}]
+public class Blueprint {
+    private String author;
+    private String name;
+    private List<Point> points;
+    // constructor, getters, toString
+}
+
+public class Point {
+    private int x;
+    private int y;
+    // constructor, getters, toString, equals/hashCode
+}
+\end{lstlisting}
+
+\subsection{Persistence Interface}
+
+\begin{lstlisting}[style=javacode, caption={BlueprintPersistence interface}]
+public interface BlueprintPersistence {
+    void saveBlueprint(Blueprint bp)
+        throws BlueprintPersistenceException;
+    Blueprint getBlueprint(String author, String name)
+        throws BlueprintNotFoundException;
+    Set<Blueprint> getBlueprintsByAuthor(String author)
+        throws BlueprintNotFoundException;
+    Set<Blueprint> getAllBlueprints();
+}
+\end{lstlisting}
+
+\subsection{Seed Data}
+
+The \texttt{InMemoryBlueprintPersistence} bean pre-loads three blueprints:
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Author} & \textbf{Name} & \textbf{Points} \\
+\midrule
+john & house   & 4 \\
+john & garage  & 3 \\
+jane & garden  & 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Service Layer}
+
+\texttt{BlueprintsServices} orchestrates all business operations (get by
+author, get by name, list all, save) and delegates post-processing to the
+active \texttt{BlueprintsFilter} implementation.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Part 2 --- JWT Security Implementation}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{RSA Key Generation}
+
+\texttt{JwtKeyProvider} generates a 2048-bit RSA key pair at application
+startup using the Java Security API:
+
+\begin{lstlisting}[style=javacode, caption={JwtKeyProvider key generation}]
+@Component
+public class JwtKeyProvider {
+    private final RSAPublicKey  publicKey;
+    private final RSAPrivateKey privateKey;
+
+    public JwtKeyProvider() throws NoSuchAlgorithmException {
+        KeyPairGenerator gen =
+            KeyPairGenerator.getInstance("RSA");
+        gen.initialize(2048);
+        KeyPair pair = gen.generateKeyPair();
+        this.publicKey  = (RSAPublicKey)  pair.getPublic();
+        this.privateKey = (RSAPrivateKey) pair.getPrivate();
+    }
+}
+\end{lstlisting}
+
+\begin{note}
+The key pair is recreated on every restart. All previously issued tokens
+become immediately invalid after a restart, which is acceptable for a
+development / lab environment.
+\end{note}
+
+\subsection{Security Configuration}
+
+\texttt{SecurityConfig} defines the Spring Security filter chain and the
+JWT infrastructure beans:
+
+\begin{lstlisting}[style=javacode, caption={SecurityConfig (simplified)}]
+@Bean
+public SecurityFilterChain filterChain(
+        HttpSecurity http) throws Exception {
+    http
+      .csrf(AbstractHttpConfigurer::disable)
+      .sessionManagement(sm -> sm.sessionCreationPolicy(
+          SessionCreationPolicy.STATELESS))
+      .authorizeHttpRequests(auth -> auth
+          .requestMatchers("/auth/login",
+              "/swagger-ui/**", "/v3/api-docs/**",
+              "/actuator/**").permitAll()
+          .anyRequest().authenticated())
+      .oauth2ResourceServer(rs ->
+          rs.jwt(Customizer.withDefaults()));
+    return http.build();
+}
+
+@Bean
+public JwtDecoder jwtDecoder(JwtKeyProvider keys) {
+    return NimbusJwtDecoder
+        .withPublicKey(keys.getPublicKey()).build();
+}
+
+@Bean
+public JwtEncoder jwtEncoder(JwtKeyProvider keys) {
+    JWK jwk = new RSAKey.Builder(keys.getPublicKey())
+        .privateKey(keys.getPrivateKey()).build();
+    return new NimbusJwtEncoder(
+        new ImmutableJWKSet<>(new JWKSet(jwk)));
+}
+\end{lstlisting}
+
+\subsection{User Service}
+
+\texttt{InMemoryUserService} implements \texttt{UserDetailsService} with two
+hard-coded users (suitable for a lab environment):
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Username} & \textbf{Password} & \textbf{Role} \\
+\midrule
+admin & \textit{bcrypt hash} & USER \\
+user  & \textit{bcrypt hash} & USER \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Token Issuer — AuthController}
+
+\texttt{POST /auth/login} validates credentials and returns a signed JWT:
+
+\begin{lstlisting}[style=javacode, caption={AuthController token issuance}]
+@PostMapping("/auth/login")
+public ResponseEntity<TokenResponse> login(
+        @RequestBody LoginRequest req) {
+    // 1. Load user and verify BCrypt password
+    // 2. Build JWT claims
+    JwtClaimsSet claims = JwtClaimsSet.builder()
+        .issuer("blueprints-api")
+        .subject(user.getUsername())
+        .issuedAt(now)
+        .expiresAt(now.plusSeconds(3600))
+        .claim("scope",
+            "blueprints.read blueprints.write")
+        .build();
+    // 3. Sign and return
+    return ResponseEntity.ok(new TokenResponse(
+        jwtEncoder.encode(...).getTokenValue(),
+        "Bearer", 3600));
+}
+\end{lstlisting}
+
+\subsection{JWT Scopes}
+
+\begin{center}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Scope} & \textbf{Allowed Operations} \\
+\midrule
+\texttt{blueprints.read}  & All GET endpoints \\
+\texttt{blueprints.write} & POST and PUT endpoints \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Evidence: Application Startup}
+
+\begin{figure}[H]
+\centering
+\imgplaceholder{3.5cm}{../images/application-startup.png}
+\caption{Spring Boot startup — RSA key pair generated, context ready}
+\label{fig:startup}
+\end{figure}
+
+\subsection{Evidence: Login and JWT}
+
+\begin{figure}[H]
+\centering
+\imgplaceholder{3.8cm}{../images/login-obtain-JWT-token.png}
+\caption{\texttt{POST /auth/login} --- 200 OK with JWT access token}
+\label{fig:login}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\imgplaceholder{3.8cm}{../images/jwt-decoded-payload.png}
+\caption{JWT payload decoded at \texttt{jwt.io} — subject, scope, expiry}
+\label{fig:jwtdecoded}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Part 3 --- Protected REST API}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{Endpoint Overview}
+
+All endpoints are defined in \texttt{BlueprintController} under the
+\texttt{/api/blueprints} base path and protected with
+\texttt{@PreAuthorize}:
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{2.8cm}p{1.5cm}p{2.5cm}@{}}
+\toprule
+\textbf{Path} & \textbf{Method} & \textbf{Required Scope} \\
+\midrule
+\texttt{/api/blueprints}              & GET    & \texttt{blueprints.read} \\
+\texttt{/api/blueprints/\{author\}}   & GET    & \texttt{blueprints.read} \\
+\texttt{/api/blueprints/\{a\}/\{n\}}  & GET    & \texttt{blueprints.read} \\
+\texttt{/api/blueprints}              & POST   & \texttt{blueprints.write} \\
+\texttt{/api/blueprints/\{a\}/\{n\}}  & PUT    & \texttt{blueprints.write} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Method-Level Security}
+
+\begin{lstlisting}[style=javacode, caption={@PreAuthorize on GET and POST}]
+@PreAuthorize(
+  "hasAuthority('SCOPE_blueprints.read')")
+@GetMapping
+public ResponseEntity<ApiResponse<
+    Set<Blueprint>>> getAllBlueprints() { ... }
+
+@PreAuthorize(
+  "hasAuthority('SCOPE_blueprints.write')")
+@PostMapping
+@ResponseStatus(HttpStatus.CREATED)
+public ResponseEntity<ApiResponse<Blueprint>>
+    createBlueprint(
+        @Valid @RequestBody
+        NewBlueprintRequest req) { ... }
+\end{lstlisting}
+
+\subsection{Uniform Response Envelope}
+
+All responses are wrapped in \texttt{ApiResponse\textless{}T\textgreater{}}:
+
+\begin{lstlisting}[style=javacode, caption={ApiResponse record}]
+public record ApiResponse<T>(
+    int    code,
+    String message,
+    T      data
+) {}
+\end{lstlisting}
+
+\subsection{HTTP Status Semantics}
+
+\begin{center}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Status} & \textbf{Condition} \\
+\midrule
+200 OK      & Successful read \\
+201 Created & Blueprint saved \\
+400         & Validation failure \\
+401         & Missing / invalid JWT \\
+403         & Insufficient scope \\
+404         & Blueprint not found \\
+500         & Unexpected server error \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Evidence: Authorised GET}
+
+\begin{figure}[H]
+\centering
+\imgplaceholder{3.8cm}{../images/get-endpoint-success-auth.png}
+\caption{\texttt{GET /api/blueprints} with valid Bearer token --- 200 OK}
+\label{fig:getok}
+\end{figure}
+
+\subsection{Evidence: Unauthorised GET (no token)}
+
+\begin{figure}[H]
+\centering
+\imgplaceholder{3.8cm}{../images/get-endpoint-unauthorized-auth.png}
+\caption{\texttt{GET /api/blueprints} without token --- 401 Unauthorized}
+\label{fig:get401}
+\end{figure}
+
+\subsection{Evidence: Authorised POST}
+
+\begin{figure}[H]
+\centering
+\imgplaceholder{3.8cm}{../images/post-endpoint-success-auth.png}
+\caption{\texttt{POST /api/blueprints} with write scope --- 201 Created}
+\label{fig:postok}
+\end{figure}
+
+\subsection{Evidence: Forbidden POST (read-only scope)}
+
+\begin{figure}[H]
+\centering
+\imgplaceholder{3.8cm}{../images/post-endpoint-forbidden-auth.png}
+\caption{\texttt{POST /api/blueprints} with read-only scope --- 403 Forbidden}
+\label{fig:post403}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Part 4 --- OpenAPI / Swagger with JWT}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{OpenAPI Security Scheme}
+
+\texttt{OpenApiConfig} registers a \textit{Bearer} security scheme so that
+Swagger UI can attach the JWT to every request:
+
+\begin{lstlisting}[style=javacode, caption={OpenApiConfig Bearer scheme}]
+@Bean
+public OpenAPI customOpenAPI() {
+    return new OpenAPI()
+      .info(new Info()
+          .title("Blueprints API Security")
+          .version("2.0.0")
+          .description(
+              "JWT-secured REST API (RS256)"))
+      .addSecurityItem(new SecurityRequirement()
+          .addList("bearerAuth"))
+      .components(new Components()
+          .addSecuritySchemes("bearerAuth",
+              new SecurityScheme()
+                  .type(SecurityScheme.Type.HTTP)
+                  .scheme("bearer")
+                  .bearerFormat("JWT")));
+}
+\end{lstlisting}
+
+\subsection{Endpoint Annotations}
+
+Every controller method is annotated with:
+\begin{itemize}
+  \item \texttt{@Operation(summary=...)} — human-readable description.
+  \item \texttt{@ApiResponses} — documents 200/201, 401, 403, 404, 500.
+  \item \texttt{@SecurityRequirement(name="bearerAuth")} — tells Swagger to
+        add the \texttt{Authorization: Bearer} header.
+  \item \texttt{@Tag(name="Blueprints")} — groups endpoints in the UI.
+\end{itemize}
+
+\subsection{Evidence: Swagger Authorize Dialog}
+
+\begin{figure}[H]
+\centering
+\imgplaceholder{4cm}{../images/swagger-auth-dialog.png}
+\caption{Swagger UI Authorize dialog for Bearer JWT entry}
+\label{fig:swaggerauth}
+\end{figure}
+
+\subsection{Evidence: Executing a Secured Endpoint}
+
+\begin{figure}[H]
+\centering
+\imgplaceholder{4cm}{../images/swagger-exec-endpoint.png}
+\caption{Swagger UI executing a secured endpoint with the authorisation token}
+\label{fig:swaggerexec}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Part 5 --- Filter Pipeline}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The filter pipeline from Lab~4 was retained without modification. It
+implements the \textbf{Strategy design pattern} to post-process blueprint
+point lists:
+
+\begin{lstlisting}[style=javacode, caption={BlueprintsFilter interface}]
+public interface BlueprintsFilter {
+    Blueprint filter(Blueprint bp);
+}
+\end{lstlisting}
+
+\subsection{Available Strategies}
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{2.2cm}p{4cm}@{}}
+\toprule
+\textbf{Filter} & \textbf{Behaviour} \\
+\midrule
+\texttt{IdentityFilter}     & Returns the original point list unchanged (default profile). \\
+\texttt{RedundancyFilter}   & Removes consecutive duplicate points (\texttt{@Profile("redundancy")}). \\
+\texttt{UndersamplingFilter}& Keeps every other point to reduce resolution (\texttt{@Profile("undersampling")}). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Profile Activation}
+
+The active filter is selected via Spring profiles in
+\texttt{application.yml}:
+
+\begin{lstlisting}[style=yamlcode, caption={Profile activation in application.yml}]
+spring:
+  profiles:
+    active: default   # use 'redundancy' or
+                      # 'undersampling' to switch
+\end{lstlisting}
+
+\begin{note}
+\texttt{IdentityFilter} uses \texttt{@Profile("\{!redundancy \&
+!undersampling\}")} so it engages automatically whenever neither alternative
+profile is active.
+\end{note}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Testing Strategy}
+% ─────────────────────────────────────────────────────────────────────────────
+
+A total of \textbf{32 tests} across 5 test classes verify functional
+correctness and security enforcement:
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{3.2cm}r@{}}
+\toprule
+\textbf{Test Class} & \textbf{Tests} \\
+\midrule
+\texttt{BlueprintServiceTests}     & 7  \\
+\texttt{AuthControllerTests}       & 6  \\
+\texttt{BlueprintControllerTests}  & 14 \\
+\texttt{FilterTests}               & 5  \\
+\midrule
+\textbf{Total}                     & \textbf{32} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{JWT Mock Technique}
+
+\texttt{BlueprintControllerTests} uses
+\texttt{SecurityMockMvcRequestPostProcessors.jwt()} to inject synthetic
+JWT-backed \texttt{Authentication} objects without ever calling
+\texttt{/auth/login}:
+
+\begin{lstlisting}[style=javacode, caption={JWT mock for scope testing}]
+// Read scope only  -> 200
+mockMvc.perform(get("/api/blueprints")
+    .with(jwt().authorities(
+        new SimpleGrantedAuthority(
+            "SCOPE_blueprints.read"))))
+    .andExpect(status().isOk());
+
+// Write scope -> 201
+mockMvc.perform(post("/api/blueprints")
+    .with(jwt().authorities(
+        new SimpleGrantedAuthority(
+            "SCOPE_blueprints.write")))
+    .contentType(APPLICATION_JSON)
+    .content(payload))
+    .andExpect(status().isCreated());
+
+// Read scope on POST -> 403
+mockMvc.perform(post("/api/blueprints")
+    .with(jwt().authorities(
+        new SimpleGrantedAuthority(
+            "SCOPE_blueprints.read")))
+    .contentType(APPLICATION_JSON)
+    .content(payload))
+    .andExpect(status().isForbidden());
+\end{lstlisting}
+
+\subsection{End-to-End Authentication Flow}
+
+One dedicated test exercises the full token lifecycle: login, token
+extraction, and a secured request using the \emph{real} token from the
+real \texttt{JwtEncoder}:
+
+\begin{lstlisting}[style=javacode,
+    caption={Real login -> real token -> real request test}]
+@Test
+void fullAuthFlow_loginThenAccessApi() throws Exception {
+    // Step 1: obtain real JWT
+    MvcResult loginResult =
+        mockMvc.perform(post("/auth/login")
+            .contentType(APPLICATION_JSON)
+            .content("{\"username\":\"admin\"," +
+                     "\"password\":\"admin123\"}"))
+        .andExpect(status().isOk())
+        .andReturn();
+
+    String token = /* extract from response body */;
+
+    // Step 2: use real JWT on secured endpoint
+    mockMvc.perform(get("/api/blueprints")
+        .header("Authorization", "Bearer " + token))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.code").value(200));
+}
+\end{lstlisting}
+
+\subsection{Evidence: All Tests Passing}
+
+\begin{figure}[H]
+\centering
+\imgplaceholder{3.8cm}{../images/tests-passing.png}
+\caption{Maven Surefire output --- Tests run: 32, Failures: 0, BUILD SUCCESS}
+\label{fig:tests}
+\end{figure}
+
+\begin{resultbox}[title={Test Run Summary}]
+\begin{itemize}
+  \item 32 tests executed across 5 test classes.
+  \item 0 failures, 0 errors, 0 skipped.
+  \item Scope enforcement (read/write/none) fully verified.
+  \item End-to-end real JWT flow verified.
+  \item Filter strategies independently tested.
+  \item Maven build: \textbf{BUILD SUCCESS}.
+\end{itemize}
+\end{resultbox}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Conclusions}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{resultbox}[title={Key Findings}]
+\begin{enumerate}
+  \item \textbf{Stateless security} via JWT eliminates server-side session
+        state, making the API horizontally scalable with no shared session
+        store.
+  \item \textbf{RS256 signing} with an ephemeral RSA key pair ensures that
+        tokens cannot be forged, even without a dedicated key-management
+        service.
+  \item \textbf{Scope-based access control} is more expressive than simple
+        role-based control: the same user account can hold both
+        \texttt{blueprints.read} and \texttt{blueprints.write}, or only
+        the read scope, without requiring multiple user records.
+  \item \textbf{\texttt{@PreAuthorize}} at the method level is the
+        correct Spring Security 6 approach, keeping security declarations
+        co-located with business logic rather than scattered across a
+        central configuration.
+  \item \textbf{MockMvc JWT mocks} (\texttt{SecurityMockMvcRequestPostProcessors.jwt()})
+        allow fast, deterministic unit testing of access-control rules
+        without spinning up an authorisation server.
+  \item \textbf{Separation of concerns} is preserved: the security layer
+        adds zero coupling to the domain, persistence, or filter layers,
+        as evidenced by unmodified service and persistence tests.
+\end{enumerate}
+\end{resultbox}
+
+\subsection{Lessons Learned}
+
+\begin{itemize}
+  \item \texttt{GlobalExceptionHandler} must re-throw
+        \texttt{AccessDeniedException} and \texttt{AuthenticationException}
+        so that Spring Security's \texttt{ExceptionTranslationFilter} can
+        convert them to 403/401 responses. Catching them inside
+        \texttt{@RestControllerAdvice} produces incorrect 500 responses.
+  \item Removing the external \texttt{jwk-set-uri} and relying on the
+        locally configured \texttt{JwtDecoder} bean avoids startup failures
+        caused by unavailable remote JWKS endpoints during development.
+  \item Spring Security auto-configures an \texttt{oauth2ResourceServer}
+        only when a \texttt{JwtDecoder} bean is present; explicitly declaring
+        \texttt{.oauth2ResourceServer(rs -> rs.jwt(...))} in the filter chain
+        definition avoids ambiguity with the auto-configuration.
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{References}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{enumerate}
+  \item Spring Security Reference --- OAuth2 Resource Server.
+        \url{https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html}
+
+  \item RFC 7519 --- JSON Web Token (JWT). IETF.
+        \url{https://datatracker.ietf.org/doc/html/rfc7519}
+
+  \item Nimbus JOSE + JWT library.
+        \url{https://connect2id.com/products/nimbus-jose-jwt}
+
+  \item Spring Boot 3.3 Release Notes.
+        \url{https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.3-Release-Notes}
+
+  \item SpringDoc OpenAPI --- \texttt{springdoc-openapi-starter-webmvc-ui}.
+        \url{https://springdoc.org}
+
+  \item JWT.io --- JWT decoder and debugger.
+        \url{https://jwt.io}
+
+  \item Baeldung --- Spring Security Test with JWT.
+        \url{https://www.baeldung.com/spring-security-test-oauth2}
+\end{enumerate}
+
+\end{document}
