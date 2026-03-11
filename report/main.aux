@@ -1,0 +1,82 @@
+\relax 
+\providecommand \babel@aux [2]{\global \let \babel@toc \@gobbletwo }
+\@nameuse{bbl@beforestart}
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\babel@aux{english}{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Objective}{3}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Application Architecture}{3}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Package Structure}{3}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Request / Response Flow}{3}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Part 1 --- Ported Domain Model}{3}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Domain Entities}{3}{subsection.3.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces Blueprint and Point records}}{3}{lstlisting.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Persistence Interface}{3}{subsection.3.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2}{\ignorespaces BlueprintPersistence interface}}{3}{lstlisting.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Seed Data}{3}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Service Layer}{3}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Part 2 --- JWT Security Implementation}{3}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}RSA Key Generation}{3}{subsection.4.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}{\ignorespaces JwtKeyProvider key generation}}{3}{lstlisting.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Security Configuration}{4}{subsection.4.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4}{\ignorespaces SecurityConfig (simplified)}}{4}{lstlisting.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}User Service}{4}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Token Issuer — AuthController}{4}{subsection.4.4}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5}{\ignorespaces AuthController token issuance}}{4}{lstlisting.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}JWT Scopes}{4}{subsection.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Evidence: Application Startup}{4}{subsection.4.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Spring Boot startup — RSA key pair generated, context ready}}{4}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:startup}{{1}{4}{Spring Boot startup — RSA key pair generated, context ready}{figure.caption.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7}Evidence: Login and JWT}{4}{subsection.4.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \texttt  {POST /auth/login} --- 200 OK with JWT access token}}{4}{figure.caption.2}\protected@file@percent }
+\newlabel{fig:login}{{2}{4}{\texttt {POST /auth/login} --- 200 OK with JWT access token}{figure.caption.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces JWT payload decoded at \texttt  {jwt.io} — subject, scope, expiry}}{5}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:jwtdecoded}{{3}{5}{JWT payload decoded at \texttt {jwt.io} — subject, scope, expiry}{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Part 3 --- Protected REST API}{5}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Endpoint Overview}{5}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Method-Level Security}{5}{subsection.5.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}{\ignorespaces @PreAuthorize on GET and POST}}{5}{lstlisting.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Uniform Response Envelope}{5}{subsection.5.3}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {7}{\ignorespaces ApiResponse record}}{5}{lstlisting.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}HTTP Status Semantics}{5}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Evidence: Authorised GET}{5}{subsection.5.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \texttt  {GET /api/blueprints} with valid Bearer token --- 200 OK}}{5}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:getok}{{4}{5}{\texttt {GET /api/blueprints} with valid Bearer token --- 200 OK}{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Evidence: Unauthorised GET (no token)}{5}{subsection.5.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \texttt  {GET /api/blueprints} without token --- 401 Unauthorized}}{5}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:get401}{{5}{5}{\texttt {GET /api/blueprints} without token --- 401 Unauthorized}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}Evidence: Authorised POST}{5}{subsection.5.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \texttt  {POST /api/blueprints} with write scope --- 201 Created}}{5}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:postok}{{6}{5}{\texttt {POST /api/blueprints} with write scope --- 201 Created}{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.8}Evidence: Forbidden POST (read-only scope)}{5}{subsection.5.8}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \texttt  {POST /api/blueprints} with read-only scope --- 403 Forbidden}}{5}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:post403}{{7}{5}{\texttt {POST /api/blueprints} with read-only scope --- 403 Forbidden}{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Part 4 --- OpenAPI / Swagger with JWT}{6}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}OpenAPI Security Scheme}{6}{subsection.6.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {8}{\ignorespaces OpenApiConfig Bearer scheme}}{6}{lstlisting.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Endpoint Annotations}{6}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Evidence: Swagger Authorize Dialog}{6}{subsection.6.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Swagger UI Authorize dialog for Bearer JWT entry}}{6}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:swaggerauth}{{8}{6}{Swagger UI Authorize dialog for Bearer JWT entry}{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Evidence: Executing a Secured Endpoint}{6}{subsection.6.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Swagger UI executing a secured endpoint with the authorisation token}}{6}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:swaggerexec}{{9}{6}{Swagger UI executing a secured endpoint with the authorisation token}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Part 5 --- Filter Pipeline}{6}{section.7}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {9}{\ignorespaces BlueprintsFilter interface}}{6}{lstlisting.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Available Strategies}{6}{subsection.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Profile Activation}{6}{subsection.7.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {10}{\ignorespaces Profile activation in application.yml}}{6}{lstlisting.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Testing Strategy}{6}{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}JWT Mock Technique}{7}{subsection.8.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {11}{\ignorespaces JWT mock for scope testing}}{7}{lstlisting.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}End-to-End Authentication Flow}{7}{subsection.8.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {12}{\ignorespaces Real login -> real token -> real request test}}{7}{lstlisting.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Evidence: All Tests Passing}{7}{subsection.8.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Maven Surefire output --- Tests run: 32, Failures: 0, BUILD SUCCESS}}{7}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:tests}{{10}{7}{Maven Surefire output --- Tests run: 32, Failures: 0, BUILD SUCCESS}{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusions}{7}{section.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Lessons Learned}{7}{subsection.9.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10}References}{8}{section.10}\protected@file@percent }
+\gdef \@abspage@last{8}
