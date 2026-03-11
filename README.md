@@ -352,8 +352,8 @@ classDiagram
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/DECSIS-ECI/Lab_P2_BluePrints_Java21_API_Security_JWT.git
-cd Lab_P2_BluePrints_Java21_API_Security_JWT
+git clone https://github.com/TerraFour-ECI/arsw-blueprints-api-security-lab
+cd arsw-blueprints-api-security-lab
 ```
 
 ### 2. Run with Maven (default profile — IdentityFilter)
