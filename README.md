@@ -688,19 +688,19 @@ mockMvc.perform(get("/api/blueprints")
 
 ## 📸 Evidence Screenshots
 
-> **Recommended screenshots to document lab completion:**
-
 ### 1. Application Startup
 Capture the terminal showing Spring Boot startup logs — look for:
 - `Tomcat initialized with port 8080`
 - `Started BlueprintsApiApplicationTests` (from test run)
 - `[INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0`
+![application-startup](images/application-startup.png)
 
 ### 2. Login — Obtain JWT Token
 - **Tool:** Postman, curl, or Swagger UI
 - **Request:** `POST /auth/login` with valid credentials
 - **Evidence:** Show the full response with `access_token`, `token_type`, `expires_in`
 - **Bonus:** Paste the token into [jwt.io](https://jwt.io) and show the decoded payload
+![login-obtain-JWT-token](images/login-obtain-JWT-token.png)
 
 ### 3. JWT Decoded Payload
 Capture [jwt.io](https://jwt.io) showing the decoded claims:
@@ -713,31 +713,38 @@ Capture [jwt.io](https://jwt.io) showing the decoded claims:
   "exp": 1710003600
 }
 ```
+![jwt-decoded-payload](images/jwt-decoded-payload.png)
 
 ### 4. Protected GET Endpoint — Success (200)
 - `GET /api/blueprints` with valid `Authorization: Bearer <token>`
 - Show the full `ApiResponse` JSON with the blueprint array
+![get-endpoint-success-auth](images/get-endpoint-success-auth.png)
 
 ### 5. Protected GET Endpoint — Unauthorized (401)
 - `GET /api/blueprints` **without** the `Authorization` header
 - Show the `401 Unauthorized` response
+![get-endpoint-unauthorized-auth](images/get-endpoint-unauthorized-auth.png)
 
 ### 6. Protected POST Endpoint — Success (201)
 - `POST /api/blueprints` with write scope token and valid body
 - Show the `201 Created` response with the created blueprint
+![post-endpoint-success-auth](images/post-endpoint-success-auth.png)
 
 ### 7. Forbidden Access (403)
 - Show a request to `POST /api/blueprints` with a reader-only token (if you modified `AuthController`)
 - OR show the Swagger UI endpoint returning `403`
+![post-endpoint-forbidden-auth](images/post-endpoint-forbidden-auth.png)
 
 ### 8. Swagger UI — Authorize Dialog
 - Screenshot of the Swagger UI at `/swagger-ui/index.html`
 - Show the **Authorize** button and the Bearer token input field
+![swagger-auth-dialog](images/swagger-auth-dialog.png)
 
 ### 9. Swagger UI — Executing a Secured Endpoint
 - Execute any endpoint from Swagger UI after authorizing
 - Show the request headers including `Authorization: Bearer ...`
 - Show the successful response
+![swagger-exec-endpoint](images/swagger-exec-endpoint.png)
 
 ### 10. All Tests Passing
 - Run `mvn test` and capture the final summary:
@@ -745,6 +752,7 @@ Capture [jwt.io](https://jwt.io) showing the decoded claims:
   [INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0
   [INFO] BUILD SUCCESS
   ```
+![tests-passing](images/tests-passing.png)
 
 ---
 
